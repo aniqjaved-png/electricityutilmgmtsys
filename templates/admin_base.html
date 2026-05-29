@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Admin Panel{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { colors: { primary: { DEFAULT: '#1a56db', dark: '#1e429f' } } } } }</script>
+  <style>
+    /* Plain CSS: the Tailwind CDN build does not process apply-directives. */
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.625rem 1rem; border-radius: 0.5rem;
+      color: #ffffff; font-size: 0.875rem; font-weight: 500;
+      text-decoration: none;
+      transition: color .15s ease, background-color .15s ease;
+    }
+    .sidebar-link:hover { color: #ffffff; background-color: rgba(255,255,255,0.10); }
+    .sidebar-link.active { color: #ffffff; background-color: rgba(255,255,255,0.15); }
+    .sidebar-link.logout { color: #fca5a5; }
+    .sidebar-link.logout:hover { color: #fecaca; }
+
+    .form-input {
+      width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem; font-size: 0.875rem; outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .form-input:focus { border-color: #1a56db; box-shadow: 0 0 0 2px rgba(26,86,219,0.30); }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 500; color: #4b5563; margin-bottom: 0.25rem; }
+
+    .btn {
+      padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;
+      font-weight: 500; border: none; cursor: pointer;
+      transition: background-color .15s ease, color .15s ease;
+    }
+    .btn-primary {
+      padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;
+      font-weight: 500; border: none; cursor: pointer;
+      background-color: #1a56db; color: #ffffff;
+      transition: background-color .15s ease, color .15s ease;
+    }
+    .btn-primary:hover { background-color: #1e429f; }
+    .btn-sm {
+      padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-size: 0.75rem;
+      font-weight: 500; border: none; cursor: pointer;
+      transition: background-color .15s ease, color .15s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-56 bg-gradient-to-b from-gray-900 to-gray-800 min-h-screen flex-shrink-0 flex flex-col">
+  <div class="px-4 py-5 border-b border-white/10">
+    <a href="/admin" class="flex items-center gap-2">
+      <span class="text-xl">⚡</span>
+      <span class="text-white font-bold text-sm">Admin Panel</span>
+    </a>
+  </div>
+  <nav class="flex-1 px-2 py-4 space-y-0.5">
+    <a href="/admin" class="sidebar-link {% if request.path == '/admin' %}active{% endif %}">
+      <span>📊</span> Dashboard
+    </a>
+    <a href="/admin/customers" class="sidebar-link {% if '/customers' in request.path %}active{% endif %}">
+      <span>👥</span> Customers
+    </a>
+    <a href="/admin/connections" class="sidebar-link {% if '/connections' in request.path %}active{% endif %}">
+      <span>🔌</span> Connections
+    </a>
+    <a href="/admin/meters" class="sidebar-link {% if '/meters' in request.path and 'readings' not in request.path %}active{% endif %}">
+      <span>🔢</span> Meters
+    </a>
+    <a href="/admin/meter-readings" class="sidebar-link {% if '/meter-readings' in request.path %}active{% endif %}">
+      <span>📋</span> Meter Readings
+    </a>
+    <a href="/admin/billing" class="sidebar-link {% if '/billing' in request.path %}active{% endif %}">
+      <span>💰</span> Billing
+    </a>
+    <a href="/admin/tariffs" class="sidebar-link {% if '/tariffs' in request.path %}active{% endif %}">
+      <span>📈</span> Tariffs
+    </a>
+    <a href="/admin/complaints" class="sidebar-link {% if '/complaints' in request.path %}active{% endif %}">
+      <span>📢</span> Complaints
+    </a>
+    <a href="/admin/outages" class="sidebar-link {% if '/outages' in request.path %}active{% endif %}">
+      <span>⚠️</span> Power Outages
+    </a>
+    <a href="/admin/employees" class="sidebar-link {% if '/employees' in request.path %}active{% endif %}">
+      <span>🧑‍💼</span> Employees
+    </a>
+  </nav>
+  <div class="px-2 pb-4 border-t border-white/10 pt-3">
+    <a href="/" class="sidebar-link"><span>🌐</span> Public Site</a>
+    <a href="/admin/logout" class="sidebar-link logout"><span>🚪</span> Logout</a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="flex-1 flex flex-col min-h-screen overflow-hidden">
+  <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <h1 class="text-lg font-semibold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h1>
+    <span class="text-sm text-gray-400">Logged in as Admin</span>
+  </header>
+  <main class="flex-1 p-6 overflow-auto">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="mb-4 p-3 rounded-lg text-sm {% if category == 'success' %}bg-green-50 border border-green-200 text-green-800{% else %}bg-red-50 border border-red-200 text-red-800{% endif %}">
+          {{ message|safe }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>
