@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Home — Electricity Portal{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+<div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl text-white p-8 md:p-12 mb-8">
+  <div class="max-w-2xl">
+    <h1 class="text-3xl md:text-4xl font-bold mb-3">Electricity Distribution<br>Management System</h1>
+    <p class="text-blue-200 text-lg mb-6">Manage your electricity connection, check bills, and submit complaints online.</p>
+    <div class="flex flex-wrap gap-3">
+      <a href="/register" class="bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">Apply for Connection</a>
+      <a href="/bill-check" class="border border-white/40 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">Check Bill</a>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  <div class="card text-center">
+    <div class="text-3xl font-bold text-primary">{{ stats.customers }}</div>
+    <div class="text-sm text-gray-500 mt-1">Registered Customers</div>
+  </div>
+  <div class="card text-center">
+    <div class="text-3xl font-bold text-green-600">{{ stats.connections }}</div>
+    <div class="text-sm text-gray-500 mt-1">Active Connections</div>
+  </div>
+  <div class="card text-center">
+    <div class="text-3xl font-bold text-yellow-600">{{ stats.complaints }}</div>
+    <div class="text-sm text-gray-500 mt-1">Pending Complaints</div>
+  </div>
+  <div class="card text-center">
+    <div class="text-3xl font-bold text-red-600">{{ stats.outages }}</div>
+    <div class="text-sm text-gray-500 mt-1">Active Outages</div>
+  </div>
+</div>
+
+<!-- Services + Outages -->
+<div class="grid md:grid-cols-2 gap-6">
+
+  <div class="card">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Our Services</h2>
+    <div class="space-y-3">
+      <a href="/register" class="flex items-center gap-4 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl group-hover:bg-blue-200 transition-colors">🔌</div>
+        <div>
+          <div class="font-medium text-gray-800">New Connection</div>
+          <div class="text-sm text-gray-500">Apply for a new electricity connection</div>
+        </div>
+      </a>
+      <a href="/bill-check" class="flex items-center gap-4 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-xl group-hover:bg-green-200 transition-colors">📄</div>
+        <div>
+          <div class="font-medium text-gray-800">Bill Check</div>
+          <div class="text-sm text-gray-500">View your billing history and payment status</div>
+        </div>
+      </a>
+      <a href="/complaint" class="flex items-center gap-4 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center text-xl group-hover:bg-yellow-200 transition-colors">📢</div>
+        <div>
+          <div class="font-medium text-gray-800">File a Complaint</div>
+          <div class="text-sm text-gray-500">Report issues with your connection or billing</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">⚡ Active Power Outages</h2>
+    {% if outages %}
+      <div class="space-y-3">
+        {% for o in outages %}
+        <div class="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-lg">
+          <span class="text-red-500 mt-0.5">🔴</span>
+          <div>
+            <div class="font-medium text-gray-800">{{ o.Area_Name }}, {{ o.City }}</div>
+            <div class="text-sm text-gray-600">{{ o.Reason }}</div>
+            <div class="text-xs text-gray-400 mt-0.5">Since {{ o.Start_Time }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="flex flex-col items-center justify-center py-8 text-gray-400">
+        <span class="text-4xl mb-2">✅</span>
+        <p class="text-sm">No active outages reported</p>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

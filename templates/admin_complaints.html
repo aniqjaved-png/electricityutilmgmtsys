@@ -1,0 +1,76 @@
+{% extends "admin_base.html" %}
+{% block title %}Complaints — Admin{% endblock %}
+{% block page_title %}Complaints{% endblock %}
+{% block content %}
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+  <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+    <span class="text-sm text-gray-500">{{ rows|length }} total</span>
+    <input type="text" placeholder="Search…" oninput="filterTable(this.value)"
+           class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-primary/30">
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" id="data-table">
+      <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+        <tr>
+          <th class="px-4 py-3 text-left">ID</th>
+          <th class="px-4 py-3 text-left">Customer</th>
+          <th class="px-4 py-3 text-left">Description</th>
+          <th class="px-4 py-3 text-left">Assigned To</th>
+          <th class="px-4 py-3 text-left">Date</th>
+          <th class="px-4 py-3 text-left">Status</th>
+          <th class="px-4 py-3 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for c in rows %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 text-gray-500">#{{ c.Complaint_Id }}</td>
+          <td class="px-4 py-3 font-medium">{{ c.Cust_Name }}</td>
+          <td class="px-4 py-3 text-gray-600 max-w-xs">{{ c.Description }}</td>
+          <td class="px-4 py-3 text-gray-500">{{ c.Employee or '—' }}</td>
+          <td class="px-4 py-3 text-gray-500">{{ c.Date_Logged }}</td>
+          <td class="px-4 py-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {% if c.Status == 'Resolved' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
+              {{ c.Status }}
+            </span>
+          </td>
+          <td class="px-4 py-3">
+            {% if c.Status == 'Pending' %}
+            <button onclick="document.getElementById('modal-{{ c.Complaint_Id }}').classList.remove('hidden')"
+                    class="btn-sm bg-green-600 text-white hover:bg-green-700">Resolve</button>
+            <div id="modal-{{ c.Complaint_Id }}" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+              <div class="bg-white rounded-xl p-6 w-80 shadow-xl">
+                <h3 class="font-semibold mb-3">Resolve Complaint #{{ c.Complaint_Id }}</h3>
+                <form method="POST" action="/admin/complaints/{{ c.Complaint_Id }}/resolve">
+                  <label class="form-label">Assign Employee (optional)</label>
+                  <select name="employee_id" class="form-input mb-4">
+                    <option value="">— None —</option>
+                    {% for i in range(1, 6) %}<option value="{{ i }}">Employee {{ i }}</option>{% endfor %}
+                  </select>
+                  <div class="flex gap-2">
+                    <button type="submit" class="btn-primary btn flex-1">Confirm</button>
+                    <button type="button" onclick="document.getElementById('modal-{{ c.Complaint_Id }}').classList.add('hidden')"
+                            class="btn flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {% else %}
+            <span class="text-gray-300 text-xs">Resolved</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+function filterTable(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('#data-table tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

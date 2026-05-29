@@ -1,0 +1,78 @@
+{% extends "admin_base.html" %}
+{% block title %}Power Outages — Admin{% endblock %}
+{% block page_title %}Power Outages{% endblock %}
+{% block content %}
+
+<!-- Add form -->
+<div class="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+  <h2 class="font-semibold text-gray-800 mb-4">Log New Outage</h2>
+  <form method="POST" action="/admin/outages/add" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div>
+      <label class="form-label">Area</label>
+      <select name="area_id" required class="form-input">
+        {% for a in areas %}
+        <option value="{{ a.Area_Id }}">{{ a.Area_Name }}, {{ a.City }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="form-label">Start Time</label>
+      <input name="start_time" type="datetime-local" required class="form-input">
+    </div>
+    <div>
+      <label class="form-label">End Time (optional)</label>
+      <input name="end_time" type="datetime-local" class="form-input">
+    </div>
+    <div>
+      <label class="form-label">Reason</label>
+      <input name="reason" required class="form-input" placeholder="Maintenance, Fault, etc.">
+    </div>
+    <div>
+      <label class="form-label">Status</label>
+      <select name="status" required class="form-input">
+        <option value="Active">Active</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+    </div>
+    <div class="flex items-end">
+      <button type="submit" class="btn-primary w-full">Add Outage</button>
+    </div>
+  </form>
+</div>
+
+<!-- Table -->
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+        <tr>
+          <th class="px-4 py-3 text-left">ID</th>
+          <th class="px-4 py-3 text-left">Area</th>
+          <th class="px-4 py-3 text-left">City</th>
+          <th class="px-4 py-3 text-left">Start</th>
+          <th class="px-4 py-3 text-left">End</th>
+          <th class="px-4 py-3 text-left">Reason</th>
+          <th class="px-4 py-3 text-left">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for o in rows %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 text-gray-500">#{{ o.Outage_Id }}</td>
+          <td class="px-4 py-3 font-medium">{{ o.Area_Name }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ o.City }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ o.Start_Time }}</td>
+          <td class="px-4 py-3 text-gray-500">{{ o.End_Time or '—' }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ o.Reason }}</td>
+          <td class="px-4 py-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {% if o.Status == 'Resolved' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+              {{ o.Status }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

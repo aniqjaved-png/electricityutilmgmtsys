@@ -1,0 +1,53 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ title }} — Admin{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+  <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+    <span class="text-sm text-gray-500">{{ rows|length }} records</span>
+    <input id="search" type="text" placeholder="Search…" oninput="filterTable(this.value)"
+           class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-primary/30">
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" id="data-table">
+      <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+        <tr>
+          {% for col in columns %}
+          <th class="px-4 py-3 text-left whitespace-nowrap">{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for row in rows %}
+        <tr class="hover:bg-gray-50">
+          {% for val in row %}
+          <td class="px-4 py-3 text-gray-700 max-w-xs">
+            {% set v = val|string %}
+            {% if v in ['Active','Paid','Resolved'] %}
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">{{ v }}</span>
+            {% elif v in ['Inactive','Unpaid'] %}
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">{{ v }}</span>
+            {% elif v == 'Pending' %}
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">{{ v }}</span>
+            {% elif v == 'None' %}
+              <span class="text-gray-300">—</span>
+            {% else %}
+              {{ v }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+function filterTable(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('#data-table tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

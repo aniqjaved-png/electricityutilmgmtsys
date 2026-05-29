@@ -1,0 +1,90 @@
+{% extends "admin_base.html" %}
+{% block title %}Dashboard — Admin{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- Stat cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white rounded-xl border border-gray-200 p-5">
+    <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">Customers</div>
+    <div class="text-3xl font-bold text-gray-900 mt-1">{{ stats.customers }}</div>
+    <a href="/admin/customers" class="text-xs text-primary mt-2 inline-block hover:underline">View all →</a>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-200 p-5">
+    <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">Connections</div>
+    <div class="text-3xl font-bold text-gray-900 mt-1">{{ stats.connections }}</div>
+    <a href="/admin/connections" class="text-xs text-primary mt-2 inline-block hover:underline">View all →</a>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-200 p-5">
+    <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">Meters</div>
+    <div class="text-3xl font-bold text-gray-900 mt-1">{{ stats.meters }}</div>
+    <a href="/admin/meters" class="text-xs text-primary mt-2 inline-block hover:underline">View all →</a>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-200 p-5">
+    <div class="text-xs text-gray-500 font-medium uppercase tracking-wide">Total Bills</div>
+    <div class="text-3xl font-bold text-gray-900 mt-1">{{ stats.bills }}</div>
+    <a href="/admin/billing" class="text-xs text-primary mt-2 inline-block hover:underline">View all →</a>
+  </div>
+</div>
+
+<!-- Revenue + Payment breakdown -->
+<div class="grid lg:grid-cols-3 gap-4 mb-6">
+  <div class="bg-gradient-to-br from-green-600 to-green-500 rounded-xl p-5 text-white">
+    <div class="text-sm text-green-100 font-medium">Total Revenue Collected</div>
+    <div class="text-3xl font-bold mt-1">PKR {{ "{:,.0f}".format(stats.revenue) }}</div>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4">
+    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-lg">✓</div>
+    <div>
+      <div class="text-xs text-gray-500 font-medium uppercase">Paid Payments</div>
+      <div class="text-2xl font-bold text-gray-900">{{ stats.paid }}</div>
+    </div>
+  </div>
+  <div class="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4">
+    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 text-lg">✗</div>
+    <div>
+      <div class="text-xs text-gray-500 font-medium uppercase">Unpaid Payments</div>
+      <div class="text-2xl font-bold text-gray-900">{{ stats.unpaid }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent complaints -->
+<div class="bg-white rounded-xl border border-gray-200">
+  <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+    <h2 class="font-semibold text-gray-800">Recent Complaints</h2>
+    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">{{ stats.pending_complaints }} pending</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+        <tr>
+          <th class="px-4 py-3 text-left">ID</th>
+          <th class="px-4 py-3 text-left">Customer</th>
+          <th class="px-4 py-3 text-left">Description</th>
+          <th class="px-4 py-3 text-left">Date</th>
+          <th class="px-4 py-3 text-left">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for c in recent_complaints %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 text-gray-500">#{{ c.Complaint_Id }}</td>
+          <td class="px-4 py-3 font-medium">{{ c.Cust_Name }}</td>
+          <td class="px-4 py-3 text-gray-600 max-w-xs truncate">{{ c.Description }}</td>
+          <td class="px-4 py-3 text-gray-500">{{ c.Date_Logged }}</td>
+          <td class="px-4 py-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium {% if c.Status == 'Resolved' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
+              {{ c.Status }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="px-5 py-3 border-t border-gray-100">
+    <a href="/admin/complaints" class="text-sm text-primary hover:underline">View all complaints →</a>
+  </div>
+</div>
+{% endblock %}

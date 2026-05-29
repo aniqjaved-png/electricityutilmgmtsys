@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}File Complaint — Electricity Portal{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">File a Complaint</h1>
+    <p class="text-gray-500 mt-1">Enter your CNIC and describe your issue. We'll assign a team member to resolve it.</p>
+  </div>
+  <form method="POST" class="card space-y-4">
+    <div>
+      <label class="form-label">CNIC <span class="text-red-500">*</span></label>
+      <input name="cnic" required class="form-input" placeholder="35201-1234567-1">
+      <p class="text-xs text-gray-400 mt-1">Used to look up your account</p>
+    </div>
+    <div>
+      <label class="form-label">Complaint Description <span class="text-red-500">*</span></label>
+      <textarea name="description" required rows="5" class="form-input resize-none" placeholder="Describe your issue in detail..."></textarea>
+    </div>
+    <button type="submit" class="btn-primary w-full">Submit Complaint</button>
+  </form>
+</div>
+{% endblock %}

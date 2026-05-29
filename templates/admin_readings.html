@@ -1,0 +1,65 @@
+{% extends "admin_base.html" %}
+{% block title %}Meter Readings — Admin{% endblock %}
+{% block page_title %}Meter Readings{% endblock %}
+{% block content %}
+
+<div class="bg-white rounded-xl border border-gray-200 p-5 mb-6">
+  <h2 class="font-semibold text-gray-800 mb-4">Record New Reading</h2>
+  <form method="POST" action="/admin/meter-readings/add" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div>
+      <label class="form-label">Meter</label>
+      <select name="meter_id" required class="form-input">
+        {% for m in meters %}
+        <option value="{{ m.Meter_Id }}">{{ m.Serial_No }} ({{ m.Meter_Type }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="form-label">Employee</label>
+      <select name="employee_id" required class="form-input">
+        {% for e in employees %}
+        <option value="{{ e.Employee_Id }}">{{ e.Name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="form-label">Reading Date</label>
+      <input name="reading_date" type="date" required class="form-input">
+    </div>
+    <div>
+      <label class="form-label">Units</label>
+      <input name="units" type="number" min="0" required class="form-input" placeholder="0">
+    </div>
+    <div class="sm:col-span-2 lg:col-span-4">
+      <button type="submit" class="btn-primary">Record Reading</button>
+    </div>
+  </form>
+</div>
+
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+        <tr>
+          <th class="px-4 py-3 text-left">ID</th>
+          <th class="px-4 py-3 text-left">Meter Serial</th>
+          <th class="px-4 py-3 text-left">Employee</th>
+          <th class="px-4 py-3 text-left">Date</th>
+          <th class="px-4 py-3 text-right">Units</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for r in rows %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 text-gray-500">#{{ r.Reading_Id }}</td>
+          <td class="px-4 py-3 font-medium font-mono">{{ r.Serial_No }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ r.Employee }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ r.Reading_Date }}</td>
+          <td class="px-4 py-3 text-right font-medium">{{ r.Units }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

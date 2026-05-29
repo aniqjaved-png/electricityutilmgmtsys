@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}WAPDA Electricity Portal{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#1a56db', light: '#3f83f8', dark: '#1e429f' },
+            accent: '#f59e0b',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .nav-link { @apply text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-md text-sm font-medium transition-colors; }
+    .btn-primary { @apply bg-primary text-white px-5 py-2.5 rounded-lg font-medium hover:bg-primary-dark transition-colors; }
+    .btn-secondary { @apply bg-white text-primary border border-primary px-5 py-2.5 rounded-lg font-medium hover:bg-blue-50 transition-colors; }
+    .card { @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6; }
+    .form-label { @apply block text-sm font-medium text-gray-700 mb-1; }
+    .form-input { @apply w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition; }
+    .badge-active { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800; }
+    .badge-inactive { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800; }
+    .badge-paid { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800; }
+    .badge-unpaid { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800; }
+    .badge-pending { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800; }
+    .badge-resolved { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+<nav class="bg-gradient-to-r from-blue-900 to-blue-700 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl">⚡</span>
+        <span class="text-white font-bold text-lg">Electricity Portal</span>
+      </a>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/register" class="nav-link">New Connection</a>
+        <a href="/complaint" class="nav-link">Complaint</a>
+        <a href="/bill-check" class="nav-link">Bill Check</a>
+        <a href="/admin" class="ml-3 bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors">Admin Panel</a>
+      </div>
+      <!-- Mobile menu button -->
+      <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden text-white p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden border-t border-white/20 px-4 pb-3 space-y-1">
+    <a href="/" class="nav-link block">Home</a>
+    <a href="/register" class="nav-link block">New Connection</a>
+    <a href="/complaint" class="nav-link block">Complaint</a>
+    <a href="/bill-check" class="nav-link block">Bill Check</a>
+    <a href="/admin" class="nav-link block">Admin Panel</a>
+  </div>
+</nav>
+
+<main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="mb-4 p-4 rounded-lg {% if category == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif category == 'danger' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %}">
+        {{ message|safe }}
+      </div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-blue-900 text-white/60 text-center text-sm py-4 mt-auto">
+  &copy; 2025 Electricity Distribution Management System
+</footer>
+</body>
+</html>

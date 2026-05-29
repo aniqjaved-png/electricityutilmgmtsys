@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Bill Check — Electricity Portal{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Check Your Bill</h1>
+    <p class="text-gray-500 mt-1">Enter your CNIC to view your billing history and payment status.</p>
+  </div>
+
+  <form method="POST" class="card flex gap-3 mb-6">
+    <input name="cnic" required class="form-input flex-1" placeholder="35201-1234567-1" value="{{ request.form.get('cnic','') }}">
+    <button type="submit" class="btn-primary whitespace-nowrap">Search</button>
+  </form>
+
+  {% if customer %}
+  <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+    <p class="font-semibold text-blue-800">{{ customer.Cust_Name }}</p>
+    <p class="text-sm text-blue-600">CNIC: {{ customer.CNIC }}</p>
+  </div>
+
+  {% if bills %}
+  <div class="card overflow-hidden p-0">
+    <div class="px-6 py-4 border-b border-gray-100">
+      <h2 class="font-semibold text-gray-800">Billing History</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
+          <tr>
+            <th class="px-4 py-3 text-left">Bill ID</th>
+            <th class="px-4 py-3 text-left">Month</th>
+            <th class="px-4 py-3 text-left">Type</th>
+            <th class="px-4 py-3 text-right">Units</th>
+            <th class="px-4 py-3 text-right">Amount</th>
+            <th class="px-4 py-3 text-left">Due Date</th>
+            <th class="px-4 py-3 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          {% for b in bills %}
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">#{{ b.Bill_Id }}</td>
+            <td class="px-4 py-3">{{ b.Billing_Month[:7] }}</td>
+            <td class="px-4 py-3">{{ b.Connection_Type_Name }}</td>
+            <td class="px-4 py-3 text-right">{{ b.Units_Consumed }}</td>
+            <td class="px-4 py-3 text-right font-medium">PKR {{ "{:,.0f}".format(b.Total_Amount) }}</td>
+            <td class="px-4 py-3 text-gray-500">{{ b.Due_Date }}</td>
+            <td class="px-4 py-3">
+              {% set st = b.Payment_Status or 'Unpaid' %}
+              <span class="badge-{{ st.lower() }}">{{ st }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="card text-center text-gray-400 py-8">No bills found for this account.</div>
+  {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

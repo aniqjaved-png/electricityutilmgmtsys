@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}New Connection — Electricity Portal{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Apply for New Connection</h1>
+    <p class="text-gray-500 mt-1">Fill in your details to register for an electricity connection.</p>
+  </div>
+
+  <form method="POST" class="space-y-6">
+    <!-- Personal Info -->
+    <div class="card">
+      <h2 class="text-base font-semibold text-gray-700 mb-4 flex items-center gap-2"><span>👤</span> Personal Information</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="form-label">Full Name <span class="text-red-500">*</span></label>
+          <input name="name" required class="form-input" placeholder="Muhammad Ali">
+        </div>
+        <div>
+          <label class="form-label">CNIC <span class="text-red-500">*</span></label>
+          <input name="cnic" required class="form-input" placeholder="35201-1234567-1" pattern="\d{5}-\d{7}-\d">
+          <p class="text-xs text-gray-400 mt-1">Format: XXXXX-XXXXXXX-X</p>
+        </div>
+        <div>
+          <label class="form-label">Phone <span class="text-red-500">*</span></label>
+          <input name="phone" required class="form-input" placeholder="03XX-XXXXXXX">
+        </div>
+        <div>
+          <label class="form-label">Email <span class="text-red-500">*</span></label>
+          <input name="email" type="email" required class="form-input" placeholder="you@example.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="card">
+      <h2 class="text-base font-semibold text-gray-700 mb-4 flex items-center gap-2"><span>🏠</span> Address</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
+          <label class="form-label">Street / House No. <span class="text-red-500">*</span></label>
+          <input name="street" required class="form-input" placeholder="House 12, Street 4">
+        </div>
+        <div>
+          <label class="form-label">City <span class="text-red-500">*</span></label>
+          <input name="city" required class="form-input" placeholder="Lahore">
+        </div>
+        <div>
+          <label class="form-label">Postal Code <span class="text-red-500">*</span></label>
+          <input name="postal" required class="form-input" placeholder="54000">
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Details -->
+    <div class="card">
+      <h2 class="text-base font-semibold text-gray-700 mb-4 flex items-center gap-2"><span>⚡</span> Connection Details</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="form-label">Connection Type <span class="text-red-500">*</span></label>
+          <select name="connection_type" required class="form-input">
+            {% for ct in connection_types %}
+            <option value="{{ ct.Connection_Type_Id }}">{{ ct.Connection_Type_Name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Area <span class="text-red-500">*</span></label>
+          <select name="area" required class="form-input">
+            {% for a in areas %}
+            <option value="{{ a.Area_Id }}">{{ a.Area_Name }}, {{ a.City }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Load Required (kW) <span class="text-red-500">*</span></label>
+          <input name="load" type="number" min="1" max="100" required class="form-input" placeholder="5">
+        </div>
+        <div>
+          <label class="form-label">Meter Type <span class="text-red-500">*</span></label>
+          <select name="meter_type" required class="form-input">
+            <option value="Digital">Digital</option>
+            <option value="Smart">Smart</option>
+            <option value="Analog">Analog</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit" class="btn-primary flex-1 text-center">Submit Application</button>
+      <a href="/" class="btn-secondary text-center px-6">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
